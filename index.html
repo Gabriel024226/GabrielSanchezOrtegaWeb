@@ -128,6 +128,7 @@
       </a>
 
       <ul class="hidden md:flex items-center gap-7 font-mono text-[13px]">
+        <li><a href="#experiencia"  class="hover:text-red transition-colors">Experiencia</a></li>
         <li><a href="#formacion"    class="hover:text-red transition-colors">Formación</a></li>
         <li><a href="#habilidades"  class="hover:text-yellow transition-colors">Habilidades</a></li>
         <li><a href="#pasatiempos"  class="hover:text-blue transition-colors">Pasatiempos</a></li>
@@ -142,6 +143,7 @@
 
     <div id="mobileMenu" class="md:hidden hidden bg-paper border-t-[3px] border-ink">
       <ul class="px-5 py-4 flex flex-col gap-2 font-mono text-sm">
+        <li><a href="#experiencia" class="block brick lift bg-red text-paper px-4 py-3">Experiencia</a></li>
         <li><a href="#formacion"   class="block brick lift bg-blue text-paper px-4 py-3">Formación</a></li>
         <li><a href="#habilidades" class="block brick lift bg-paper px-4 py-3">Habilidades</a></li>
         <li><a href="#pasatiempos" class="block brick lift bg-yellow px-4 py-3">Pasatiempos</a></li>
@@ -176,8 +178,10 @@
           </p>
 
           <p class="snap mt-5 max-w-xl text-lg leading-relaxed text-ink/80" style="animation-delay:.42s">
-            Apasionado por el desarrollo de software, la infraestructura tecnológica
-            y la creación de soluciones eficientes. Cada problema, una pieza que encaja.
+            Disciplinado, resiliente y orientado al aprendizaje continuo, con experiencia en
+            desarrollo de software, ingeniería de plataformas e implementación de modelos de
+            Machine Learning. Transformo requerimientos técnicos en productos escalables, de alta
+            disponibilidad y eficientes. Cada problema, una pieza que encaja.
           </p>
 
           <!-- Call to action buttons (game-style bricks) -->
@@ -226,12 +230,66 @@
     </div>
   </section>
 
+  <!-- ============================ EXPERIENCIA (work timeline) ============================ -->
+  <section id="experiencia" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal mb-12 flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA B1 · RECORRIDO</p>
+          <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Experiencia profesional</h2>
+        </div>
+        <p class="font-mono text-sm text-ink/60">línea cronológica · reciente primero</p>
+      </div>
+
+      <div class="relative">
+        <span class="absolute top-6 bottom-6 left-[21px] sm:left-[23px] w-[3px] bg-ink" aria-hidden="true"></span>
+
+        <ol class="space-y-6">
+
+          <!-- NOKIA · most recent -->
+          <li class="reveal relative pl-16 sm:pl-20">
+            <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue border-[3px] border-ink grid place-items-center text-paper z-10"><i class="fa-solid fa-briefcase"></i></span>
+            <div class="brick lift bg-paper p-6">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">sep 2025 — ago 2026</span>
+                <span class="font-mono text-[11px] text-ink/55">PLATFORM ENGINEER TRAINEE</span>
+              </div>
+              <h3 class="font-display font-extrabold text-xl">NOKIA</h3>
+              <ul class="mt-3 space-y-2 text-ink/75">
+                <li class="flex gap-3"><span class="shape s-sq w-3 h-3 mt-1.5 shrink-0"></span>Infraestructura y virtualización con Docker, Kubernetes y Terraform; despliegues automatizados por configuración de entornos.</li>
+                <li class="flex gap-3"><span class="shape s-sq w-3 h-3 mt-1.5 shrink-0"></span>Flujos CI/CD que agilizaron el ciclo de desarrollo y redujeron tiempos de entrega para equipos distribuidos entre India, Chicago y México.</li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Proyecto ML UPIBI -->
+          <li class="reveal relative pl-16 sm:pl-20">
+            <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 bg-red border-[3px] border-ink grid place-items-center text-paper z-10"><i class="fa-solid fa-brain"></i></span>
+            <div class="brick lift bg-paper p-6">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">mar — ago 2025</span>
+                <span class="font-mono text-[11px] text-ink/55">DESARROLLADOR DE MODELO ML</span>
+              </div>
+              <h3 class="font-display font-extrabold text-xl">Proyecto ML · UPIBI</h3>
+              <ul class="mt-3 space-y-2 text-ink/75">
+                <li class="flex gap-3"><span class="shape s-circ w-3 h-3 mt-1.5 shrink-0"></span>Modelos de visión por computadora con Scikit-Learn y TensorFlow, maximizando la precisión en reconocimiento de imágenes.</li>
+                <li class="flex gap-3"><span class="shape s-circ w-3 h-3 mt-1.5 shrink-0"></span>Datasets masivos procesados con Pandas; pipeline de preprocesamiento optimizado para menor consumo de memoria y carga más rápida.</li>
+                <li class="flex gap-3"><span class="shape s-circ w-3 h-3 mt-1.5 shrink-0"></span>Ajuste de hiperparámetros (descenso de gradiente) que redujo la tasa de falsos positivos.</li>
+              </ul>
+            </div>
+          </li>
+
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================ FORMACIÓN (game levels) ============================ -->
   <section id="formacion" class="py-16 sm:py-24">
     <div class="mx-auto max-w-6xl px-5 sm:px-8">
       <div class="reveal mb-12 flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA B1 · TRAYECTORIA</p>
+          <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA C1 · TRAYECTORIA</p>
           <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Formación académica</h2>
         </div>
         <p class="font-mono text-sm text-ink/60">línea cronológica · 3 niveles</p>
@@ -248,11 +306,11 @@
             <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue border-[3px] border-ink grid place-items-center font-display font-extrabold text-paper text-lg z-10">1</span>
             <div class="brick lift bg-paper p-6">
               <div class="flex flex-wrap items-center gap-2 mb-2">
-                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — 20XX</span>
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">2016 — 2019</span>
                 <span class="font-mono text-[11px] text-ink/55">NIVEL 1 · SECUNDARIA · completado</span>
               </div>
-              <h3 class="font-display font-bold text-xl">[Nombre de la escuela secundaria]</h3>
-              <p class="mt-1 text-ink/70">Educación básica. <span class="italic">Reemplaza el nombre y los años.</span></p>
+              <h3 class="font-display font-bold text-xl">Colegio Cristobal Colón</h3>
+              <p class="mt-1 text-ink/70">Educación básica. </p>
             </div>
           </li>
 
@@ -261,11 +319,11 @@
             <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 bg-red border-[3px] border-ink grid place-items-center font-display font-extrabold text-paper text-lg z-10">2</span>
             <div class="brick lift bg-paper p-6">
               <div class="flex flex-wrap items-center gap-2 mb-2">
-                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — 20XX</span>
-                <span class="font-mono text-[11px] text-ink/55">NIVEL 2 · PREPARATORIA · completado</span>
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">2019 — 2022</span>
+                <span class="font-mono text-[11px] text-ink/55">NIVEL 2 · MEDIA SUPERIOR · completado</span>
               </div>
-              <h3 class="font-display font-bold text-xl">[Nombre de la preparatoria]</h3>
-              <p class="mt-1 text-ink/70">Educación media superior. <span class="italic">Reemplaza el nombre y los años.</span></p>
+              <h3 class="font-display font-bold text-xl">CECyT 9 — IPN</h3>
+              <p class="mt-1 text-ink/70">Técnico en Programación.</p>
             </div>
           </li>
 
@@ -275,11 +333,11 @@
             <div class="brick lift bg-yellow p-6 sm:p-7 relative">
               <span class="absolute top-4 right-4 font-mono text-[11px] bg-ink text-paper px-2 py-1">ACTUALIDAD</span>
               <div class="flex flex-wrap items-center gap-2 mb-2 pr-24">
-                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — hoy</span>
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">2022 — hoy</span>
                 <span class="font-mono text-[11px]">NIVEL 3 · UNIVERSIDAD · en curso</span>
               </div>
-              <h3 class="font-display font-extrabold text-2xl">Ingeniería en Sistemas Computacionales</h3>
-              <p class="mt-1 text-ink/80">Cursando 8.º semestre — desarrollo de software e infraestructura tecnológica.</p>
+              <h3 class="font-display font-extrabold text-2xl">ESCOM — IPN</h3>
+              <p class="mt-1 text-ink/80">Ingeniería en Sistemas Computacionales — cursando 8.º semestre.</p>
             </div>
           </li>
 
@@ -292,7 +350,7 @@
   <section id="habilidades" class="py-16 sm:py-24">
     <div class="mx-auto max-w-6xl px-5 sm:px-8">
       <div class="reveal mb-12">
-        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA C1 · INVENTARIO</p>
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA D1 · INVENTARIO</p>
         <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Habilidades técnicas</h2>
         <p class="mt-4 text-ink/70 text-lg">Cada barra, una pieza cargada. Toca el encabezado para plegar cada bloque.</p>
       </div>
@@ -365,6 +423,58 @@
         </div>
 
       </div>
+
+      <!-- Tech stack (from CV) + languages, as a tag board -->
+      <div class="reveal brick bg-paper p-6 sm:p-8 mt-6">
+        <div class="grid md:grid-cols-2 gap-x-10 gap-y-6">
+          <div>
+            <p class="font-mono text-xs text-ink/55 mb-3"><span class="shape s-sq w-3 h-3 inline-block align-middle mr-2"></span>TECNOLOGÍAS</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Docker</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Kubernetes</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">CI/CD</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Terraform</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Linux (Debian/Ubuntu)</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Apache</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">NGINX</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">SNMP</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">TensorFlow</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Scikit-Learn</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">PySpark</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Pandas</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">OpenCV</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">MediaPipe</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-mono text-xs text-ink/55 mb-3"><span class="shape s-circ w-3 h-3 inline-block align-middle mr-2"></span>LENGUAJES</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Python</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">C</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">C++</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Java</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">JavaScript</span>
+            </div>
+            <p class="font-mono text-xs text-ink/55 mb-3"><span class="s-tri inline-block align-middle mr-2" style="border-left-width:6px;border-right-width:6px;border-bottom-width:11px;"></span>WEB, MÓVIL &amp; BD</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">React.js</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Node.js</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Flutter</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">Firebase</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">HTML / CSS</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">MySQL</span>
+              <span class="border-2 border-ink px-2.5 py-1 text-sm">PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="mt-7 pt-6 border-t-[3px] border-ink flex flex-wrap items-center gap-3">
+          <p class="font-mono text-xs text-ink/55 mr-1">IDIOMAS</p>
+          <span class="brick bg-blue text-paper px-3 py-1.5 text-sm font-semibold">Español · Nativo</span>
+          <span class="brick bg-yellow px-3 py-1.5 text-sm font-semibold">Inglés · Avanzado</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -372,7 +482,7 @@
   <section id="pasatiempos" class="py-16 sm:py-24">
     <div class="mx-auto max-w-6xl px-5 sm:px-8">
       <div class="reveal mb-12">
-        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA D1 · FUERA DEL TABLERO</p>
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA E1 · FUERA DEL TABLERO</p>
         <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Pasatiempos favoritos</h2>
       </div>
 
@@ -431,7 +541,7 @@
   <section id="cripto" class="py-16 sm:py-24">
     <div class="mx-auto max-w-6xl px-5 sm:px-8">
       <div class="reveal mb-12 max-w-2xl">
-        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA E1 · ACERTIJOS</p>
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA F1 · ACERTIJOS</p>
         <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Datos curiosos de criptografía</h2>
         <p class="mt-4 text-ink/70 text-lg">Tres piezas que cambiaron cómo protegemos la información.</p>
       </div>
@@ -456,7 +566,7 @@
               <span class="shape s-sq w-5 h-5"></span> PIEZA 01 · WWII
             </div>
             <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">La Máquina Enigma</h3>
-            <p class="text-ink/75 leading-relaxed">El trabajo de Alan Turing para descifrar los códigos durante la Segunda Guerra Mundial.</p>
+            <p class="text-ink/75 leading-relaxed">Aunque es mundialmente famosa por su uso militar durante la Segunda Guerra Mundial, fue patentada originalmente en 1918 por el ingeniero alemán Arthur Scherbius para proteger comunicaciones comerciales en bancos y empresas. Uno de los mayores fallos que permitió a los aliados descifrarla no fue tecnológico, sino humano; los operadores alemanes solían usar configuraciones iniciales predecibles por pereza, como el nombre de sus novias o teclear letras consecutivas en el teclado.</p>
           </div>
         </article>
 
@@ -467,7 +577,7 @@
               <span class="shape s-circ w-5 h-5"></span> PIEZA 02 · 1977
             </div>
             <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">El origen de RSA</h3>
-            <p class="text-ink/75 leading-relaxed">La genialidad de basar la seguridad en la factorización de números primos gigantes.</p>
+            <p class="text-ink/75 leading-relaxed">Este algoritmo revolucionó la seguridad en 1977 y lleva las iniciales de sus creadores (Rivest, Shamir y Adleman). Sin embargo, la criptografía de clave pública ya había sido inventada en secreto cuatro años antes por Clifford Cocks, un matemático de la agencia de inteligencia británica GCHQ. Debido a que su trabajo fue catalogado como alto secreto, Cocks no pudo reclamar el mérito y el mundo no supo de su hallazgo hasta que los documentos se desclasificaron en 1997.</p>
           </div>
           <div class="media border-[3px] border-ink aspect-video bg-blue/10 order-1 lg:order-2">
             <!-- MEDIA SLOT — replace with a YouTube <iframe> if you prefer video. -->
@@ -488,7 +598,7 @@
               <span class="s-tri" style="border-left-width:9px;border-right-width:9px;border-bottom-width:16px;"></span> PIEZA 03 · 2008
             </div>
             <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">El misterio de Satoshi Nakamoto</h3>
-            <p class="text-ink/75 leading-relaxed">Funciones hash y criptografía asimétrica combinadas para crear la blockchain — y el secreto de su identidad.</p>
+            <p class="text-ink/75 leading-relaxed">El creador anónimo de Bitcoin dejó un mensaje oculto en el código del "bloque génesis" (el primer bloque de datos jamás minado en su red). Insertó el titular de la portada del periódico británico The Times del 3 de enero de 2009: "Chancellor on brink of second bailout for banks". Esta frase sirvió tanto como una marca de tiempo inalterable para probar cuándo se creó el bloque, como una crítica directa al sistema financiero tradicional durante la crisis bancaria global.</p>
           </div>
         </article>
 
@@ -505,15 +615,24 @@
         <span class="shape s-circ absolute bottom-6 left-10 w-6 h-6"></span>
         <span class="s-tri absolute top-8 right-8" style="border-left-width:14px;border-right-width:14px;border-bottom-width:24px;"></span>
 
-        <p class="font-mono text-xs mb-4 inline-block bg-paper text-ink px-3 py-1.5">PIEZA F1 · ENCAJA</p>
+        <p class="font-mono text-xs mb-4 inline-block bg-paper text-ink px-3 py-1.5">PIEZA G1 · ENCAJA</p>
         <h2 class="font-display font-extrabold text-4xl sm:text-6xl">¿Armamos algo juntos?</h2>
         <p class="mt-4 text-paper/70 max-w-md mx-auto text-lg">Abierto a proyectos, colaboraciones y buenas conversaciones sobre software y seguridad.</p>
 
         <div class="mt-9">
-          <a href="mailto:gabriel.sanchez@ejemplo.com"
+          <a href="mailto:sanchez.ortega.gabriel024226@gmail.com"
              class="brick lift bg-red text-paper px-8 py-4 font-semibold inline-flex items-center gap-3">
             <i class="fa-solid fa-envelope"></i> Enviar correo
           </a>
+        </div>
+
+        <!-- Contact meta pulled from the CV -->
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-xs text-paper/70">
+          <span class="inline-flex items-center gap-2"><i class="fa-solid fa-location-dot"></i> Naucalpan, Estado de México</span>
+          <span class="inline-flex items-center gap-2"><i class="fa-solid fa-envelope"></i> sanchez.ortega.gabriel024226@gmail.com</span>
+          <!-- Optional: uncomment to show your phone publicly.
+          <span class="inline-flex items-center gap-2"><i class="fa-solid fa-phone"></i> +52 56 1874 5995</span>
+          -->
         </div>
 
         <div class="mt-9 flex items-center justify-center gap-4">
