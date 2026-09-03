@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gabriel Sanchez Ortega — Ingeniería en Sistemas Computacionales</title>
+  <meta name="description" content="Portafolio personal de Gabriel Sanchez Ortega, estudiante de Ingeniería en Sistemas Computacionales. Desarrollo de software, infraestructura tecnológica y criptografía." />
+
+  <!-- Tailwind CSS (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Fonts: Syne (display) · Jost (body, Futura-like / Bauhaus) · Space Mono (piece coordinates) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind theme tokens: strict Bauhaus primaries + toy-block system -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper:  '#F1ECDE', // warm bauhaus paper
+            ink:    '#17130F', // warm near-black
+            red:    '#E1362B', // bauhaus red    → square
+            blue:   '#274BB0', // bauhaus blue   → circle
+            yellow: '#F4C020', // bauhaus yellow → triangle
+          },
+          fontFamily: {
+            display: ['Syne', 'system-ui', 'sans-serif'],
+            sans:    ['Jost', 'system-ui', 'sans-serif'],
+            mono:    ['"Space Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --paper:#F1ECDE; --ink:#17130F; --red:#E1362B; --blue:#274BB0; --yellow:#F4C020;
+    }
+    html { scroll-behavior: smooth; }
+    body { -webkit-font-smoothing: antialiased; }
+
+    /* Pegboard: the whole page sits on a Lego-style dot grid */
+    .pegboard {
+      background-color: var(--paper);
+      background-image: radial-gradient(rgba(23,19,15,.14) 2px, transparent 2.4px);
+      background-size: 28px 28px;
+      background-position: 6px 6px;
+    }
+
+    /* Toy brick: hard edges + solid offset shadow (no blur = plastic/block feel) */
+    .brick { border: 3px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); }
+    .lift  { transition: transform .16s ease, box-shadow .16s ease; }
+    .lift:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 var(--ink); }
+    .lift:active { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--ink); }
+
+    /* Lego studs — the tactile signature that says "toy piece" */
+    .studs { display:flex; gap:12px; }
+    .stud  { width:16px; height:16px; border-radius:50%; border:2.5px solid var(--ink); }
+
+    /* Geometric system: circle=blue, square=red, triangle=yellow */
+    .shape { border:2.5px solid var(--ink); }
+    .s-circ { border-radius:50%; background:var(--blue); }
+    .s-sq   { background:var(--red); }
+    .s-tri  { width:0; height:0; border:none; border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:28px solid var(--yellow); filter:drop-shadow(1px 1.5px 0 var(--ink)); }
+    .spin { transition: transform .35s cubic-bezier(.2,.9,.25,1.4); }
+    .spin:hover { transform: rotate(90deg); }
+
+    /* Signature load animation: pieces snap into place with a small bounce */
+    @keyframes snapIn {
+      0%   { opacity:0; transform: translateY(-30px) rotate(-6deg) scale(.94); }
+      70%  { opacity:1; }
+      100% { opacity:1; transform: none; }
+    }
+    .snap { opacity:0; animation: snapIn .6s cubic-bezier(.2,.9,.25,1.25) both; }
+
+    /* Scroll reveal for lower pieces */
+    .reveal { opacity:0; transform: translateY(22px); transition: opacity .55s ease, transform .55s cubic-bezier(.2,.9,.25,1.2); }
+    .reveal.is-visible { opacity:1; transform:none; }
+
+    /* Framed media keeps a crisp block edge */
+    .media { position:relative; overflow:hidden; }
+
+    /* Skill bars: segmented "level-load" bars that fill on reveal */
+    .skill-track { position:relative; background:rgba(23,19,15,.07); overflow:hidden; }
+    .skill-track::after {
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background-image: repeating-linear-gradient(90deg, transparent 0 14px, rgba(23,19,15,.16) 14px 16px);
+    }
+    .skill-fill { width:0; transition: width 1.1s cubic-bezier(.2,.9,.25,1); }
+
+    /* Collapsible skill cards */
+    .skill-body { max-height:900px; overflow:hidden; transition:max-height .4s ease, opacity .3s ease; }
+    .skill-card.collapsed .skill-body { max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
+    .skill-card.collapsed .chevron { transform: rotate(180deg); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior:auto; }
+      .snap { opacity:1; animation:none; }
+      .reveal { opacity:1; transform:none; transition:none; }
+      .lift { transition:none; }
+      .spin { transition:none; }
+      .skill-fill { transition:none; }
+      .skill-body { transition:none; }
+    }
+
+    a:focus-visible, button:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+  </style>
+</head>
+
+<body class="pegboard text-ink font-sans selection:bg-yellow">
+
+  <!-- ============================ NAVBAR ============================ -->
+  <header class="fixed top-0 inset-x-0 z-50 bg-paper/90 backdrop-blur border-b-[3px] border-ink">
+    <nav class="mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between">
+      <!-- Logo built from the three primitives -->
+      <a href="#inicio" class="flex items-center gap-2.5 group">
+        <span class="shape s-sq spin w-4 h-4"></span>
+        <span class="shape s-circ spin w-4 h-4"></span>
+        <span class="s-tri spin" style="border-left-width:8px;border-right-width:8px;border-bottom-width:14px;"></span>
+        <span class="font-display font-extrabold tracking-tight text-lg ml-1">GSO</span>
+      </a>
+
+      <ul class="hidden md:flex items-center gap-7 font-mono text-[13px]">
+        <li><a href="#formacion"    class="hover:text-red transition-colors">Formación</a></li>
+        <li><a href="#habilidades"  class="hover:text-yellow transition-colors">Habilidades</a></li>
+        <li><a href="#pasatiempos"  class="hover:text-blue transition-colors">Pasatiempos</a></li>
+        <li><a href="#cripto"      class="hover:text-red transition-colors">Criptografía</a></li>
+        <li><a href="#contacto" class="brick lift bg-yellow px-4 py-2 font-sans font-600 font-semibold">Contacto</a></li>
+      </ul>
+
+      <button id="menuBtn" class="md:hidden brick lift bg-paper w-11 h-11 grid place-items-center" aria-label="Abrir menú" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </nav>
+
+    <div id="mobileMenu" class="md:hidden hidden bg-paper border-t-[3px] border-ink">
+      <ul class="px-5 py-4 flex flex-col gap-2 font-mono text-sm">
+        <li><a href="#formacion"   class="block brick lift bg-blue text-paper px-4 py-3">Formación</a></li>
+        <li><a href="#habilidades" class="block brick lift bg-paper px-4 py-3">Habilidades</a></li>
+        <li><a href="#pasatiempos" class="block brick lift bg-yellow px-4 py-3">Pasatiempos</a></li>
+        <li><a href="#cripto"      class="block brick lift bg-red text-paper px-4 py-3">Criptografía</a></li>
+        <li><a href="#contacto"    class="block brick lift bg-ink text-paper px-4 py-3">Contacto</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ============================ HERO ============================ -->
+  <section id="inicio" class="pt-28 pb-16 sm:pt-36 sm:pb-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+
+      <!-- Piece coordinate label -->
+      <p class="snap font-mono text-xs mb-6 inline-flex items-center gap-2 bg-ink text-paper px-3 py-1.5" style="animation-delay:.02s">
+        PIEZA A1 · PERFIL
+      </p>
+
+      <div class="grid lg:grid-cols-[1.1fr_.9fr] gap-10 lg:gap-14 items-start">
+
+        <!-- Left: name assembled from word-blocks -->
+        <div>
+          <h1 class="font-display font-extrabold leading-[.95] text-5xl sm:text-7xl lg:text-[5.5rem] flex flex-col gap-2">
+            <span class="snap inline-block bg-red text-paper brick px-4 py-1 w-fit" style="animation-delay:.08s">Gabriel</span>
+            <span class="snap inline-block bg-blue text-paper brick px-4 py-1 w-fit" style="animation-delay:.18s">Sanchez</span>
+            <span class="snap inline-block bg-yellow brick px-4 py-1 w-fit" style="animation-delay:.28s">Ortega</span>
+          </h1>
+
+          <p class="snap mt-7 font-mono text-sm sm:text-base" style="animation-delay:.36s">
+            <span class="bg-ink text-paper px-2 py-0.5">8.º semestre</span>
+            Ingeniería en Sistemas Computacionales
+          </p>
+
+          <p class="snap mt-5 max-w-xl text-lg leading-relaxed text-ink/80" style="animation-delay:.42s">
+            Apasionado por el desarrollo de software, la infraestructura tecnológica
+            y la creación de soluciones eficientes. Cada problema, una pieza que encaja.
+          </p>
+
+          <!-- Call to action buttons (game-style bricks) -->
+          <div class="snap mt-9 flex flex-col sm:flex-row gap-4" style="animation-delay:.5s">
+            <a href="./archivos/CV_Gabriel_Sanchez_O.pdf" download
+               class="brick lift bg-yellow px-6 py-4 font-semibold inline-flex items-center justify-center gap-3">
+              <i class="fa-solid fa-download"></i> Descargar CV
+            </a>
+            <a href="./archivos/llave_publica_sog.asc" download
+               class="brick lift bg-blue text-paper px-6 py-4 font-semibold inline-flex items-center justify-center gap-3">
+              <i class="fa-solid fa-puzzle-piece"></i> Descargar Llave Pública
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: profile piece — the "portrait" as a board tile with studs + shapes -->
+        <div class="snap relative mx-auto lg:mx-0 w-full max-w-sm" style="animation-delay:.32s">
+          <!-- floating primitives that snap in and spin on hover -->
+          <span class="shape s-circ spin absolute -top-5 -left-5 w-12 h-12 z-10"></span>
+          <span class="s-tri spin absolute -bottom-4 -right-2 z-10" style="border-left-width:22px;border-right-width:22px;border-bottom-width:38px;"></span>
+
+          <div class="brick bg-paper p-4">
+            <div class="studs mb-4 pl-1">
+              <span class="stud" style="background:var(--red)"></span>
+              <span class="stud" style="background:var(--blue)"></span>
+              <span class="stud" style="background:var(--yellow)"></span>
+              <span class="stud" style="background:var(--paper)"></span>
+            </div>
+            <!--
+              Replace ./img/perfil.jpg with your real photo.
+              A themed "Foto de perfil" placeholder is drawn if the file is missing.
+            -->
+            <div class="media border-[3px] border-ink">
+              <img src="./img/perfil.jpg" alt="Foto de perfil de Gabriel Sanchez Ortega"
+                   class="w-full aspect-[4/5] object-cover"
+                   onerror="imgFallback(this,'Foto de perfil')" />
+            </div>
+            <div class="mt-3 flex items-center justify-between font-mono text-[11px]">
+              <span>ID · <span class="text-red">GSO-2026</span></span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-blue rounded-full"></span>encajado</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FORMACIÓN (game levels) ============================ -->
+  <section id="formacion" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal mb-12 flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA B1 · TRAYECTORIA</p>
+          <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Formación académica</h2>
+        </div>
+        <p class="font-mono text-sm text-ink/60">línea cronológica · 3 niveles</p>
+      </div>
+
+      <!-- Vertical chronology: a thick ink spine threads the colored nodes; year chips carry the timeline -->
+      <div class="relative">
+        <span class="absolute top-6 bottom-6 left-[21px] sm:left-[23px] w-[3px] bg-ink" aria-hidden="true"></span>
+
+        <ol class="space-y-6">
+
+          <!-- Node 1 · Secundaria (blue circle) -->
+          <li class="reveal relative pl-16 sm:pl-20">
+            <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue border-[3px] border-ink grid place-items-center font-display font-extrabold text-paper text-lg z-10">1</span>
+            <div class="brick lift bg-paper p-6">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — 20XX</span>
+                <span class="font-mono text-[11px] text-ink/55">NIVEL 1 · SECUNDARIA · completado</span>
+              </div>
+              <h3 class="font-display font-bold text-xl">[Nombre de la escuela secundaria]</h3>
+              <p class="mt-1 text-ink/70">Educación básica. <span class="italic">Reemplaza el nombre y los años.</span></p>
+            </div>
+          </li>
+
+          <!-- Node 2 · Preparatoria (red square) -->
+          <li class="reveal relative pl-16 sm:pl-20">
+            <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 bg-red border-[3px] border-ink grid place-items-center font-display font-extrabold text-paper text-lg z-10">2</span>
+            <div class="brick lift bg-paper p-6">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — 20XX</span>
+                <span class="font-mono text-[11px] text-ink/55">NIVEL 2 · PREPARATORIA · completado</span>
+              </div>
+              <h3 class="font-display font-bold text-xl">[Nombre de la preparatoria]</h3>
+              <p class="mt-1 text-ink/70">Educación media superior. <span class="italic">Reemplaza el nombre y los años.</span></p>
+            </div>
+          </li>
+
+          <!-- Node 3 · Universidad (current — yellow node with ring, highlighted card) -->
+          <li class="reveal relative pl-16 sm:pl-20">
+            <span class="absolute left-0 top-1 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-yellow border-[3px] border-ink grid place-items-center font-display font-extrabold text-lg z-10 shadow-[0_0_0_6px_rgba(244,192,32,.3)]">3</span>
+            <div class="brick lift bg-yellow p-6 sm:p-7 relative">
+              <span class="absolute top-4 right-4 font-mono text-[11px] bg-ink text-paper px-2 py-1">ACTUALIDAD</span>
+              <div class="flex flex-wrap items-center gap-2 mb-2 pr-24">
+                <span class="font-mono text-xs bg-ink text-paper px-2.5 py-1">20XX — hoy</span>
+                <span class="font-mono text-[11px]">NIVEL 3 · UNIVERSIDAD · en curso</span>
+              </div>
+              <h3 class="font-display font-extrabold text-2xl">Ingeniería en Sistemas Computacionales</h3>
+              <p class="mt-1 text-ink/80">Cursando 8.º semestre — desarrollo de software e infraestructura tecnológica.</p>
+            </div>
+          </li>
+
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HABILIDADES ============================ -->
+  <section id="habilidades" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal mb-12">
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA C1 · INVENTARIO</p>
+        <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Habilidades técnicas</h2>
+        <p class="mt-4 text-ink/70 text-lg">Cada barra, una pieza cargada. Toca el encabezado para plegar cada bloque.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6 items-start">
+
+        <!-- Card 1 · Languages & Web -->
+        <div class="skill-card reveal brick bg-paper">
+          <button class="skill-toggle w-full flex items-start gap-4 p-6 text-left" aria-expanded="true" aria-controls="skills-web">
+            <span class="shape s-sq w-12 h-12 grid place-items-center text-paper shrink-0"><i class="fa-solid fa-code"></i></span>
+            <span class="flex-1 min-w-0">
+              <span class="block font-display font-extrabold text-xl leading-tight">Lenguajes y Desarrollo Web</span>
+              <span class="block font-mono text-xs text-ink/55 mt-1">Frontend &amp; Backend</span>
+            </span>
+            <i class="fa-solid fa-chevron-up chevron mt-1.5 transition-transform" aria-hidden="true"></i>
+          </button>
+          <div id="skills-web" class="skill-body px-6 pb-6 space-y-4">
+            <!-- row -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5"><span class="font-semibold">Python</span><span class="font-mono text-sm">90%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-blue" data-pct="90"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5"><span class="font-semibold">JavaScript / Node.js</span><span class="font-mono text-sm">85%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-red" data-pct="85"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5"><span class="font-semibold">PHP</span><span class="font-mono text-sm">85%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-yellow" data-pct="85"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5"><span class="font-semibold">Java</span><span class="font-mono text-sm">80%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-blue" data-pct="80"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5"><span class="font-semibold">HTML5 &amp; CSS3</span><span class="font-mono text-sm">95%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-red" data-pct="95"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 · AI & Database -->
+        <div class="skill-card reveal brick bg-paper">
+          <button class="skill-toggle w-full flex items-start gap-4 p-6 text-left" aria-expanded="true" aria-controls="skills-ai">
+            <span class="shape s-circ w-12 h-12 grid place-items-center text-paper shrink-0"><i class="fa-solid fa-database"></i></span>
+            <span class="flex-1 min-w-0">
+              <span class="block font-display font-extrabold text-xl leading-tight">IA y Arquitectura de Datos</span>
+              <span class="block font-mono text-xs text-ink/55 mt-1">Ciencia de Datos y Almacenamiento</span>
+            </span>
+            <i class="fa-solid fa-chevron-up chevron mt-1.5 transition-transform" aria-hidden="true"></i>
+          </button>
+          <div id="skills-ai" class="skill-body px-6 pb-6 space-y-4">
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-1.5"><span class="font-semibold">MySQL / SQL Server / PostgreSQL</span><span class="font-mono text-sm shrink-0">90%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-yellow" data-pct="90"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-1.5"><span class="font-semibold">Redes Neuronales Convolucionales (CNN)</span><span class="font-mono text-sm shrink-0">80%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-blue" data-pct="80"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-1.5"><span class="font-semibold">Algoritmos de Clasificación (ID3, CART)</span><span class="font-mono text-sm shrink-0">85%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-red" data-pct="85"></span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-1.5"><span class="font-semibold">Optimización y Seguridad de BD</span><span class="font-mono text-sm shrink-0">85%</span></div>
+              <div class="skill-track border-[2.5px] border-ink h-4"><span class="skill-fill block h-full bg-yellow" data-pct="85"></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PASATIEMPOS ============================ -->
+  <section id="pasatiempos" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal mb-12">
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA D1 · FUERA DEL TABLERO</p>
+        <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Pasatiempos favoritos</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Gimnasio · red square -->
+        <article class="reveal brick lift bg-paper overflow-hidden">
+          <div class="media aspect-[16/11] border-b-[3px] border-ink bg-red/10">
+            <img src="./img/pasatiempo-gimnasio.jpg" alt="Entrenamiento físico"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'Gimnasio')" />
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="shape s-sq w-9 h-9 grid place-items-center text-paper"><i class="fa-solid fa-dumbbell text-sm"></i></span>
+              <h3 class="font-display font-bold text-lg">Entrenamiento físico</h3>
+            </div>
+            <p class="text-ink/70 leading-relaxed">Rutinas de gimnasio matutinas para mantener la disciplina.</p>
+          </div>
+        </article>
+
+        <!-- Videojuegos · blue circle -->
+        <article class="reveal brick lift bg-paper overflow-hidden">
+          <div class="media aspect-[16/11] border-b-[3px] border-ink bg-blue/10">
+            <img src="./img/pasatiempo-videojuegos.jpg" alt="Videojuegos"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'Videojuegos')" />
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="shape s-circ w-9 h-9 grid place-items-center text-paper"><i class="fa-solid fa-gamepad text-sm"></i></span>
+              <h3 class="font-display font-bold text-lg">Videojuegos</h3>
+            </div>
+            <p class="text-ink/70 leading-relaxed">Títulos de PC, consolas y móviles — analizando mecánicas y rendimiento.</p>
+          </div>
+        </article>
+
+        <!-- Cultura geek · yellow triangle -->
+        <article class="reveal brick lift bg-paper overflow-hidden">
+          <div class="media aspect-[16/11] border-b-[3px] border-ink bg-yellow/20">
+            <img src="./img/pasatiempo-geek.jpg" alt="Cultura geek: manga y anime"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'Manga y Anime')" />
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-9 h-9 grid place-items-center s-tri" style="border-left-width:15px;border-right-width:15px;border-bottom-width:26px;"></span>
+              <h3 class="font-display font-bold text-lg">Cultura geek</h3>
+            </div>
+            <p class="text-ink/70 leading-relaxed">Lectura de manga (como <span class="font-semibold">Steel Ball Run</span>) y series de anime.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CRIPTOGRAFÍA (puzzle cartridges) ============================ -->
+  <section id="cripto" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal mb-12 max-w-2xl">
+        <p class="font-mono text-xs mb-3 inline-block bg-ink text-paper px-3 py-1.5">PIEZA E1 · ACERTIJOS</p>
+        <h2 class="font-display font-extrabold text-4xl sm:text-5xl">Datos curiosos de criptografía</h2>
+        <p class="mt-4 text-ink/70 text-lg">Tres piezas que cambiaron cómo protegemos la información.</p>
+      </div>
+
+      <div class="space-y-6">
+
+        <!-- 1 · Enigma -->
+        <article class="reveal brick bg-paper grid lg:grid-cols-2 gap-6 p-5 sm:p-6 items-center">
+          <div class="media border-[3px] border-ink aspect-video bg-red/10 order-1">
+            <!--
+              MEDIA SLOT — swap the <img> for a YouTube video:
+              <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID"
+                title="La Máquina Enigma" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            -->
+            <img src="./img/cripto-enigma.jpg" alt="La Máquina Enigma"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'Enigma · imagen o video')" />
+          </div>
+          <div class="order-2">
+            <div class="inline-flex items-center gap-2 font-mono text-xs mb-3">
+              <span class="shape s-sq w-5 h-5"></span> PIEZA 01 · WWII
+            </div>
+            <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">La Máquina Enigma</h3>
+            <p class="text-ink/75 leading-relaxed">El trabajo de Alan Turing para descifrar los códigos durante la Segunda Guerra Mundial.</p>
+          </div>
+        </article>
+
+        <!-- 2 · RSA (reversed) -->
+        <article class="reveal brick bg-paper grid lg:grid-cols-2 gap-6 p-5 sm:p-6 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="inline-flex items-center gap-2 font-mono text-xs mb-3">
+              <span class="shape s-circ w-5 h-5"></span> PIEZA 02 · 1977
+            </div>
+            <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">El origen de RSA</h3>
+            <p class="text-ink/75 leading-relaxed">La genialidad de basar la seguridad en la factorización de números primos gigantes.</p>
+          </div>
+          <div class="media border-[3px] border-ink aspect-video bg-blue/10 order-1 lg:order-2">
+            <!-- MEDIA SLOT — replace with a YouTube <iframe> if you prefer video. -->
+            <img src="./img/cripto-rsa.jpg" alt="El origen de RSA"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'RSA · imagen o video')" />
+          </div>
+        </article>
+
+        <!-- 3 · Satoshi -->
+        <article class="reveal brick bg-paper grid lg:grid-cols-2 gap-6 p-5 sm:p-6 items-center">
+          <div class="media border-[3px] border-ink aspect-video bg-yellow/20 order-1">
+            <!-- MEDIA SLOT — replace with a YouTube <iframe> if you prefer video. -->
+            <img src="./img/cripto-satoshi.jpg" alt="El misterio de Satoshi Nakamoto"
+                 class="w-full h-full object-cover" onerror="imgFallback(this,'Satoshi · imagen o video')" />
+          </div>
+          <div class="order-2">
+            <div class="inline-flex items-center gap-2 font-mono text-xs mb-3">
+              <span class="s-tri" style="border-left-width:9px;border-right-width:9px;border-bottom-width:16px;"></span> PIEZA 03 · 2008
+            </div>
+            <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-3">El misterio de Satoshi Nakamoto</h3>
+            <p class="text-ink/75 leading-relaxed">Funciones hash y criptografía asimétrica combinadas para crear la blockchain — y el secreto de su identidad.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CONTACTO / FOOTER ============================ -->
+  <footer id="contacto" class="py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="reveal brick bg-ink text-paper p-8 sm:p-14 text-center relative overflow-hidden">
+        <!-- corner primitives -->
+        <span class="shape s-sq absolute top-6 left-6 w-8 h-8"></span>
+        <span class="shape s-circ absolute bottom-6 left-10 w-6 h-6"></span>
+        <span class="s-tri absolute top-8 right-8" style="border-left-width:14px;border-right-width:14px;border-bottom-width:24px;"></span>
+
+        <p class="font-mono text-xs mb-4 inline-block bg-paper text-ink px-3 py-1.5">PIEZA F1 · ENCAJA</p>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl">¿Armamos algo juntos?</h2>
+        <p class="mt-4 text-paper/70 max-w-md mx-auto text-lg">Abierto a proyectos, colaboraciones y buenas conversaciones sobre software y seguridad.</p>
+
+        <div class="mt-9">
+          <a href="mailto:gabriel.sanchez@ejemplo.com"
+             class="brick lift bg-red text-paper px-8 py-4 font-semibold inline-flex items-center gap-3">
+            <i class="fa-solid fa-envelope"></i> Enviar correo
+          </a>
+        </div>
+
+        <div class="mt-9 flex items-center justify-center gap-4">
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"
+             class="brick lift bg-paper text-ink w-12 h-12 grid place-items-center">
+            <i class="fa-brands fa-linkedin-in text-lg"></i>
+          </a>
+          <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub"
+             class="brick lift bg-paper text-ink w-12 h-12 grid place-items-center">
+            <i class="fa-brands fa-github text-lg"></i>
+          </a>
+        </div>
+
+        <p class="mt-12 font-mono text-xs text-paper/50">© 2026 Gabriel Sanchez Ortega — HTML5 &amp; Tailwind CSS.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ SCRIPTS ============================ -->
+  <script>
+    // --- Mobile menu toggle ---
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('hidden') === false;
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    mobileMenu.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      })
+    );
+
+    // --- Themed image fallback (Bauhaus / puzzle placeholder) ---
+    function imgFallback(el, label) {
+      el.onerror = null;
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">' +
+          '<rect width="800" height="600" fill="#F1ECDE"/>' +
+          // pegboard dots
+          '<g fill="rgba(23,19,15,.14)">' +
+            Array.from({length: 22}, (_, c) =>
+              Array.from({length: 17}, (_, r) => '<circle cx="' + (18 + c*36) + '" cy="' + (18 + r*36) + '" r="2.4"/>').join('')
+            ).join('') +
+          '</g>' +
+          // three primitives
+          '<circle cx="300" cy="250" r="60" fill="#274BB0" stroke="#17130F" stroke-width="5"/>' +
+          '<rect x="380" y="190" width="120" height="120" fill="#E1362B" stroke="#17130F" stroke-width="5"/>' +
+          '<polygon points="560,310 620,190 680,310" fill="#F4C020" stroke="#17130F" stroke-width="5" stroke-linejoin="round"/>' +
+          // label plate
+          '<rect x="200" y="380" width="400" height="70" fill="#17130F"/>' +
+          '<text x="400" y="425" font-family="Space Mono, monospace" font-size="26" fill="#F1ECDE" text-anchor="middle">' + label + '</text>' +
+          '<text x="400" y="500" font-family="Space Mono, monospace" font-size="15" fill="#17130F" text-anchor="middle" opacity=".65">pieza faltante · coloca tu imagen</text>' +
+        '</svg>';
+      el.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    // --- Scroll reveal ---
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reveals = document.querySelectorAll('.reveal');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      reveals.forEach(el => el.classList.add('is-visible'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            // small stagger so grouped pieces snap in sequence
+            setTimeout(() => e.target.classList.add('is-visible'), (i % 3) * 80);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      reveals.forEach(el => io.observe(el));
+    }
+
+    // --- Skill bars: fill to their percentage when scrolled into view ---
+    const fills = document.querySelectorAll('.skill-fill');
+    const applyFill = el => { el.style.width = (el.dataset.pct || 0) + '%'; };
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      fills.forEach(applyFill);
+    } else {
+      const sio = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { applyFill(e.target); sio.unobserve(e.target); }
+        });
+      }, { threshold: 0.4 });
+      fills.forEach(el => sio.observe(el));
+    }
+
+    // --- Collapsible skill cards ---
+    document.querySelectorAll('.skill-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.skill-card');
+        const collapsed = card.classList.toggle('collapsed');
+        btn.setAttribute('aria-expanded', String(!collapsed));
+      });
+    });
+  </script>
+</body>
+</html>
